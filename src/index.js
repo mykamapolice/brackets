@@ -1,56 +1,31 @@
-module.exports = function check(str, bracketsConfig) {
-  var stack = [];
+module.exports = function check(str, bracketsConfig){
+    let str1=str;
+    let str2='';
+    let compare_str='';
+    let ind=0;
 
-    var lenstr = str.length;
-    if (lenstr % 2 != 0) return false;
-
-    var lenConfig = bracketsConfig.length;
-    var checkeven = 1;
-    var cheven;
-    var chClose;
-    for (var i = 0; i < lenstr; i++) {
-        var ch = str.charAt(i);
-        var close = false;
-        var open = false;
-        var even = false;
-        for (let j = 0; j < lenConfig; j++) {
-            if (bracketsConfig[j][0] == bracketsConfig[j][1] && ch == bracketsConfig[j][0]) {
-                even = true;
-                checkeven = (-1) * checkeven;
-                cheven = ch;
-                console.log('checkeven = ', checkeven)
-                break;
-            }
-            if (ch == bracketsConfig[j][0]) {
-                open = true;
-                break;
-            }
-            if (ch == bracketsConfig[j][1]) {
-                close = true;
-                chClose = bracketsConfig[j][0];
-                break;
+    while (str1.length>0) {
+        compare_str=str1;
+        for (let i = 0; i < str1.length; i++) {
+            for (let j = 0; j < bracketsConfig.length; j++) {
+                ind = str1.indexOf(bracketsConfig[j][0]+bracketsConfig[j][1]);
+                if (ind>=0){
+                    str2 = str1.slice(0, ind) + str1.slice(ind + 2);
+                    str1 = str2;
+                }
             }
         }
-        if (even == true) {
-            if (checkeven == -1) {
-                stack.push(ch);
-                console.log('push=', ch);
-            }
-            if (checkeven == 1 && cheven == stack[stack.length - 1]) {
-                console.log(' pop stack[stack.length-1]=', stack[stack.length - 1], ', ch= ', ch)
-                stack.pop();
-            }
-        } else {
-
-            if (open === true) {
-                stack.push(ch);
-                console.log('push=', ch);
-            }
-            if (close === true && chClose == stack[stack.length - 1]) {
-                console.log(' pop stack[stack.length-1]=', stack[stack.length - 1], ', ch= ', ch)
-                stack.pop();
-            }
+        if (compare_str.length===str1.length){
+            break
         }
     }
-    return (stack.length === 0);
-};
+
+    if (str1.length===0){
+        return true
+    }else{
+        return false
+    }
+}
+
+console.log(check('()', [['(', ')']]))
+
